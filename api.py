@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request, render_template
-from models.model import db
+from models.model import db, Localizacao
 bp = Blueprint("api", __name__)
 
 @bp.route("/")
@@ -8,10 +8,12 @@ def index():
 
 @bp.route("/api/infos", methods = ["GET"])
 def infos():
-    if request.method == "POST":
-        texto = request.form.get("texto")
-        db.session.add(texto)
+    if request.method == "GET":
+        texto = request.args.get("texto")
+        new_info = Localizacao(texto = texto)
+        db.session.add(new_info)
         db.session.commit()
-        return jsonify({"message":"texto adicionado com sucesso", "status":200}) 
+        variavel = ({"message":"texto adicionado com sucesso", "status":200}) 
+        return render_template("text.html")
     else:
        return render_template("text.html")
