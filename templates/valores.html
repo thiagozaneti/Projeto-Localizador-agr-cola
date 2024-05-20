@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualização de Valores</title>
+</head>
+<body>
+    <h2>Sensor Log</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>id</th>
+                <th>valor sensor 1</th>
+                <th>valor sensor 2</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for valor in valores %}
+            <tr>
+                <td>{{ valor.id }}</td>
+                <td>{{ valor.sensor_um }}</td>
+                <td>{{ valor.sensor_dois }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <script>
+        setInterval(function () {
+          location.reload();
+        }, 5000); 
+      </script>
+</body>
+</html>

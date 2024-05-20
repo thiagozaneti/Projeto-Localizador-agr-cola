@@ -21,14 +21,24 @@ def infos():
     
 @bp.route("/api/infos/sensores", methods=["POST"])
 def receber_sensores():
-    data = request.get_json()
-    data_sensor_1 = data.get("sensor1")
-    data_sensor_2 = data.get("sensor2")
     if request.method == "POST":
-        new_info_um = Localizacao(sensor_um = data_sensor_1)
-        new_info_dois = Localizacao(sensor_um = data_sensor_2)
-        db.session.add(new_info_um, new_info_dois)
+        data = request.get_json()
+        data_sensor_1 = data.get("temperature")
+        data_sensor_2 = data.get("humidity")
+        
+        if data_sensor_1 is None or data_sensor_2 is None:
+            return jsonify({"error": "Missing data"}), 400
+        
+        new_infos = Localizacao(sensor_um=data_sensor_1, sensor_dois = data_sensor_2)
+        
+        db.session.add(new_infos)
         db.session.commit()
-        return jsonify({"sensor_um":data_sensor_1,"sensor_dois":data_sensor_2, "status":200})
-    logging.info(f"Dados recebidos {data}")
-    return "dados recebidos com sucesso"
+        
+        return jsonify({"sensor_um": data_sensor_1, "sensor_dois": data_sensor_2, "status": 200})
+
+    return jsonify({"error": "Invalid method"}), 405
+
+@bp.route("/api/infos/sensores/visualizar_logs", methods = ["GET"])
+def visualizar_sensores():
+    valores = Localizacao.query.all()
+    return render_template("valores.html", valores = valores)
