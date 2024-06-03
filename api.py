@@ -25,21 +25,29 @@ def receber_sensores():
         if not data:
             return jsonify({"error": "Sem data enviada"}), 400
         
-        data_sensor_1 = data.get("temperature")
-        data_sensor_2 = data.get("humidity")
+        latitude = data.get("latitude")
+        longitude = data.get("longitude")
+        altitude = data.get("altitude")
+        speed = data.get("speed")
         
-        if data_sensor_1 is None or data_sensor_2 is None:
+        if latitude is None or longitude is None or altitude is None or speed is None:
             return jsonify({"error": "Sem data"}), 400
         
-        new_infos = Localizacao(sensor_um=data_sensor_1, sensor_dois=data_sensor_2)
+        new_infos = Localizacao(latitude=latitude, longitude = longitude, altitude = altitude, speed = speed)
         db.session.add(new_infos)
         db.session.commit()
         
-        return jsonify({"sensor_um": data_sensor_1, "sensor_dois": data_sensor_2, "status": 200})
+        return jsonify({"lat": latitude , "long": longitude, "altitude":altitude, "speed": speed , "status": 200})
     if request.method == "GET":
         valores = Localizacao.query.all()
-        return jsonify([{"id": valor.id, "sensor_um": valor.sensor_um, "sensor_dois": valor.sensor_dois} for valor in valores])
+        return jsonify([{"lat": latitude , "long": longitude, "altitude":altitude, "speed": speed , "status": 200} for valor in valores])
     return jsonify({"error"})
+
+@bp.route("/api/coordenadas", methods = ["GET"])
+def get_coordernadas():
+    coordenadas = Localizacao.query.order_by(Localizacao.id.desc()).limit(10).all()
+    lista_coordenadas = [{"longitude":coord.longitude, "latitude": coord.latitude}for coord in coordenadas]
+    return lista_coordenadas
 
 @bp.route("/api/infos/sensores/visualizar_logs", methods=["GET"])
 def visualizar_sensores():

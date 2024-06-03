@@ -1,15 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Index</title>
+  <title>Live Map</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    #map { height: 500px; width: 500px; }
+  </style>
 </head>
-<h1>Bem vindo</h1>
 <body>
+  <div id="map"></div>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    // Initialize the map
+    var map = L.map('map').setView([0, 0], 2);
 
+    // Add a tile layer
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+    L.icon()
+
+    // Function to fetch and update coordinates
+    async function fetchCoordinates() {
+      const response = await fetch('/api/coordenadas');
+      const data = await response.json();
+
+      // Clear existing markers
+      map.eachLayer(function (layer) {
+        if (layer instanceof L.Marker) {
+          map.removeLayer(layer);
+        }
+      });
+
+      // Add markers for each coordinate
+      data.forEach(coord => {
+        L.marker([coord.latitude, coord.longitude]).addTo(map);
+      });
+    }
+
+    // Fetch coordinates every 5 seconds
+    setInterval(fetchCoordinates, 5000);
+
+    // Initial fetch
+    fetchCoordinates();
+  </script>
 </body>
-
 </html>
