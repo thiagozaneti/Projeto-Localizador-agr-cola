@@ -34,16 +34,13 @@
         }
       });
 
-      // Add markers for each coordinate
       data.forEach(coord => {
         L.marker([coord.latitude, coord.longitude]).addTo(map);
       });
     }
 
-    // Fetch coordinates every 5 seconds
     setInterval(fetchCoordinates, 5000);
 
-    // Initial fetch
     fetchCoordinates();
   </script>
 </body>

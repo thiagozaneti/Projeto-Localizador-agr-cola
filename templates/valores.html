@@ -19,8 +19,10 @@
             {% for valor in valores %}
             <tr>
                 <td>{{ valor.id }}</td>
-                <td>{{ valor.sensor_um }}</td>
-                <td>{{ valor.sensor_dois }}</td>
+                <td>{{ valor.latitude }}</td>
+                <td>{{ valor.longitude }}</td>
+                <td>{{ valor.altitude }}</td>
+                <td>{{ valor.speed }}</td>
             </tr>
             {% endfor %}
         </tbody>

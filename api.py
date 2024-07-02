@@ -7,16 +7,9 @@ bp = Blueprint("api", __name__)
 def index():
     return render_template("index.html")
 
-@bp.route("/api/infos", methods=["GET"])
-def infos():
-    texto = request.args.get("texto")
-    if texto:
-        new_info = Localizacao(texto=texto)
-        db.session.add(new_info)
-        db.session.commit()
-        return jsonify({"message": "texto adicionado com sucesso", "status": 200})
-    else:
-        return jsonify({"error": "Missing texto parameter"}), 400
+@bp.route("/desenhar")
+def desenhar_mapa():
+    return render_template("map.html")
 
 @bp.route("/api/infos/sensores", methods=["POST", "GET"])
 def receber_sensores():
